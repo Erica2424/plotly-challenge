@@ -1,42 +1,43 @@
-function buildTable() {
-
-d3.json("samples.json").then(
-    (data) => {
-    console.log(data);
-    var bioMetadata= data.metadata;
-
-    var result = bioMetadata.filter( oneitem => oneitem.id == userselect);
-
-
-});
-
-}
-
-// create the function to get the necessary data
-function getDemoInfo(id) {
-    // read the json file to get data
-        d3.json("samples.json").then((data)=> {
-    // get the metadata info for the demographic panel
-            var metadata = data.metadata;
+// create the function for the initial data rendering
+function init() {
+    // select dropdown menu 
+    var dropdown = d3.select("#selDataset");
     
-            console.log(metadata)
+    // read the data 
+    d3.json("samples.json").then((data)=> {
+        console.log(data)
 
-//dropdown menu
-function initalizing() {
-
-    d3.json("samples.json").then((data) => { 
-            
-            var items = data.names;
-            console.log(items)
-            
-            items = ["940", "941", "942"]
-            
-            var dropdown  = d3.select("#selDataset").append("select"),
-        
-            data.names.forEach(function(item) {
-                dropdown.append("option").text(item).property("value");
-            });
+        // get the id data to the dropdown menu
+        data.names.forEach(function(name) {
+            dropdown.append("option").text(name).property("value");
         });
+d3.json('samples.json').then(data => {
+    const ys = data.samples.map(objectInData =>
+        objectInData.sample_values.slice(0,10))
+    
+    const xs = data.samples.map(objectInData =>
+        objectInData.otu_ids.slice(0,10))
+
+var trace1 = {
+    x:xs,
+    y:ys,
+    type: 'hbar',
+};
+
+var plot1 = [trace1];
+
+var layout = {
+    title: "Sample Values",
+    xaxis: { title: "OTU IDs"},
+    yaxis: { title: "OTU Labels"}
 }
 
-initalizing();
+Plotly.newPlot('bar-plot',plot1, layout);
+})
+        // call the functions to display the data and the plots to the page
+        // getPlots(data.names[0]);
+        // getDemoInfo(data.names[0]);
+    });
+}
+
+init();
